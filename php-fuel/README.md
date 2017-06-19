@@ -63,8 +63,8 @@
     - conf/000-default.conf
 
    `
-   # cd php-fuel/docker
-   # docker build -f 7.0-dev/Dockerfile -t tutorialdev01 .
+   > cd php-fuel/docker
+   > docker build -f 7.0-dev/Dockerfile -t tutorialdev01 .
    `
 
    - Change this Dockerfile for release
@@ -75,8 +75,8 @@
       - conf/001-default.conf
 
      `
-     # cd php-fuel/docker
-     # docker build -f 7.0-release/Dockerfile -t tutorialrel01 .
+     > cd php-fuel/docker
+     > docker build -f 7.0-release/Dockerfile -t tutorialrel01 .
      `
 
 
