@@ -15,7 +15,7 @@
    - Build docker image for develop
  - ローカルのDocker環境でアプリケーションのテストを行う
    - Test apps on local machine with docker env
-   - docker runでリポジト
+   - docker runからローカル環境のフォルダにマウントして開発作業する手順まで
 
  - モビンギのdocker registryを利用する
    - Use mobingi private registry
@@ -25,7 +25,7 @@
    - Lunch ALM for test from build image
  - 登録したdockerイメージを利用してmobingiALMのリリース用stackを起動する
    - Lunch ALM for release from build image
- 
+
 
 
 ## Docker for macOS をインストール(Install docker for macOS)
@@ -34,22 +34,22 @@
 ## 開発用のDockerイメージを作成する(Build docker image for develop)
  - サンプルのリポジトリを取得する
    - clone sample git repository
-   
+
    ` https://github.com/hkdstamp/ubuntu-apache2-php7`
 
  - Change this Dockerfile for development
    - add vim,git,zip,unzip,composer
- 
- 
-### ローカル環境にdockerイメージを作成する(build docker image on local)
- 
+
+
+### ローカル環境でdockerイメージを実行して開発作業を行う
+
  - Run docker image on local and debug source.
 
-### ローカル環境にdockerイメージを作成する(build docker image on local)
+### 用意したdockerイメージを使ってALMのstackを起動する
 
  - After all test pass, lunch ALM by using build image.
 
-## 用意したdockerイメージを使ってmobingiALMを作成する
+### 起動したstackにgitのソースを接続する
 
  - After lunch ALM stack, try to connect git repository.
 
