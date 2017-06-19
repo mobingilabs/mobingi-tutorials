@@ -1,25 +1,28 @@
-# build web apps on mobingiALM
+# Build web apps on mobingiALM
 
- - install docker for macOS
- - build docker image
- - test apps on local machine
- - use mobingi private registry
- - push mobingi private registry
- - lunch ALM from build image.
+ - Install docker for macOS
+ - Build docker image
+ - Test apps on local machine
+ - Use mobingi private registry
+ - Push mobingi private registry
+ - Lunch ALM from build image.
 
 
-## install docker for macOS
+## Install docker for macOS
 
-## build docker image
+## Build docker image
 
-clone sample git repository
-https://github.com/hkdstamp/ubuntu-apache2-php7
+ - clone sample git repository
 
-Change　this Dockerfile for dev.
-and build docker image on local.
-run docker image on local and debug source.
-after all test pass, lunch ALM by using build image.
+` https://github.com/hkdstamp/ubuntu-apache2-php7`
 
-after lunch ALM stack, try to connect git repository.
-above done, it is ready for development throght git.
-local env change and push, ALM stack rebuild and switch new env automatic.
+ - Change this Dockerfile for dev.
+ - And build docker image on local.
+ - Run docker image on local and debug source.
+ - After all test pass, lunch ALM by using build image.
+
+ - After lunch ALM stack, try to connect git repository.
+
+### above done, it is ready for development throght git.
+
+ - local env change and push to git, ALM stack rebuild and switch new env automatically.
