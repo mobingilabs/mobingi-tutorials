@@ -14,7 +14,7 @@
  - 開発用のDockerイメージを作成する
    - Build docker image for develop
  - ローカルのDocker環境でアプリケーションのテストを行う
-   - Test apps on local machine　with docker env
+   - Test apps on local machine with docker env
  - モビンギのdocker registryを利用する
    - Use mobingi private registry
  - モビンギのdocker registryにイメージを登録する
