@@ -16,8 +16,11 @@
 
 ` https://github.com/hkdstamp/ubuntu-apache2-php7`
 
- - Change this Dockerfile for dev.
- - And build docker image on local.
+ - Change this Dockerfile for development
+ - add vim,git,zip,unzip,composer
+ 
+### build docker image on local.
+ 
  - Run docker image on local and debug source.
  - After all test pass, lunch ALM by using build image.
 
