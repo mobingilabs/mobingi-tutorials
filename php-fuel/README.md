@@ -1,4 +1,4 @@
-# mobingiALMとDockerを使って開発環境を構築
+# mobingiALM＋Dockerで開発環境を構築
  - Build web apps on mobingiALM with local docker env.
 
  - このチュートリアルについて
@@ -9,63 +9,67 @@
 
 # チュートリアル手順
 
- - 0.Docker for macOS をインストール
-   - Install docker for macOS
- - 1.開発用のDockerイメージを作成する
-   - Build docker image for develop
- - 1.ローカルのDocker環境でアプリケーションのテストを行う
-   - Test apps on local machine with docker env
-   - docker runからローカル環境のフォルダにマウントして開発作業する手順まで
-
- - 2.モビンギのユーザーアカウントを用意する
- - 2.モビンギのdocker registryを利用する
-   - Use mobingi private registry
- - 2.モビンギのdocker registryにイメージを登録する
-   - Push mobingi private registry
- - 3.登録したdockerイメージを利用してmobingiALMのテスト用stackを起動する
-   - Lunch ALM for test from build image
- - 3.登録したdockerイメージを利用してmobingiALMのリリース用stackを起動する
-   - Lunch ALM for release from build image
- - 4.開発環境で修正したソースをmobingiALMに反映する
-     - modify source code on local env, and updata mobingiALM
+0. Docker for macOS をインストール(Install docker for macOS)
+1. 開発用のDockerイメージを作成する(Build docker image for develop)
+2. ローカルのDocker環境でアプリケーションのテストを行う(Test apps on local machine with docker env)
+   - docker runからローカル環境のフォルダにマウントして開発作業する手順まで
+3. mobingiALMに必要な設定を準備する
+4. モビンギのdocker registryを利用する(Use mobingi private registry)
+5. mobingiALMにテスト用とリリース用のstackを作成する
+    - Lunch ALM for test,release with registed docker image
+6. 開発環境で修正したソースをmobingiALMに反映する
+    - modify source code on local env, and updata mobingiALM
 
 
 
-## Docker for macOS をインストール(Install docker for macOS)
- - https://docs.docker.com/docker-for-mac/install/
+## 0.Docker for macOS をインストール(Install docker for macOS)
+- 下記URLを参照の上、ご利用端末にインストールしてください。
+- https://docs.docker.com/docker-for-mac/install/
 
 
 
-## 作業環境のファイル構成(File structure on local env)
- - 作業フォルダの場所
+## 1.開発用のDockerイメージを作成する(Build docker image for develop)
+### 作業環境のファイル構成(File structure on local env)
+ 1. 作業フォルダの場所
+    - dockerイメージのフォルダをアタッチするため、Users/[username]/の下に作業フォルダを用意します。
 
- - dockerイメージのフォルダをアタッチするため、Users/[username]/の下に作業フォルダを用意します。
+      **file structure**
+      ```
+      Users/[username]/
+          /mobingi-tutorials
+          ※dockerイメージを作成するためのサンプルと作業環境一式
+            /php-fuel
+              /developer    ※ 開発作業用
 
-   - file structure
-   `
-   Users/[username]/
-     workfolder/
-       /[docker-work-folder]
-       ※dockerイメージを作成するためのサンプル
-       /[webapp-work-folder]
-   `
-## 開発用のDockerイメージを作成する(Build docker image for develop)
- - サンプルのリポジトリを取得する
-   - clone sample git repository
+              /docker       ※ docker作業用
 
-   `https://github.com/mobingilabs/mobingi-tutorials.git`
+      ```
 
- - Change this Dockerfile for development
-   - add vim,git,zip,unzip,composer
-     - ref Dockerfile
 
-   - setup apache conf
-    - conf/000-default.conf
+ 2. サンプルのリポジトリを取得する(clone sample git repository)
 
-   `
-   > cd php-fuel/docker
-   > docker build -f 7.0-dev/Dockerfile -t tutorialdev01 .
-   `
+    `https://github.com/mobingilabs/mobingi-tutorials.git`
+
+    ```
+    > cd /Users/[usename]/
+    > git clone https://github.com/mobingilabs/mobingi-tutorials.git
+    ```
+    2.1. gege
+
+
+    - Change this Dockerfile for development
+       - add vim,git,zip,unzip,composer
+         - ref Dockerfile
+
+       - setup apache conf
+        - conf/000-default.conf
+
+      ```
+      > cd php-fuel/docker
+      > docker build -f 7.0-dev/Dockerfile -t tutorialdev01 .
+      ```
+
+## リリース用のDockerイメージを作成する(Build docker image for release)
 
    - Change this Dockerfile for release
      - remove vim,git,zip,unzip,composer
@@ -87,6 +91,10 @@
  `
  Docker run --name mobingi-alm-alone --restart always -v /Users/kodo/Develops/hkdstamp:/var/www/html --env-file /Users/kodo/Develops/hkdstamp/env/envlist -p 80:80 -p 443:443 -it modev01 /run.sh
  `
+
+
+ - 2.モビンギのdocker registryにイメージを登録する
+   - Push mobingi private registry
 
 
 ### 用意したdockerイメージを使ってALMのstackを起動する
