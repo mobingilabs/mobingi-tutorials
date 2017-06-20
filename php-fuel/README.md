@@ -260,11 +260,11 @@ repositoryの設定| public
 
 2. githubを接続後、stack詳細のリソースのリンクを開き、Webサイトが表示されることを確認します。
 
-![Webサイト確認画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/create-stack-01.png)
+![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/create-stack-01.png)
 
 
 
-![Webサイト確認画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/preview-website-preview-00.png)
+![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/preview-website-preview-00.png)
 
 
 ## 4.ローカル環境で修正したソースをmobingiALM上にリリースする
@@ -272,4 +272,14 @@ repositoryの設定| public
 
 1. 起動したローカル環境でソースコードを修正して接続したgit repositoryにpushします。<br>
 
+![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/update-local-source.png)
+
+
+
 2. 自動的にmobingiALM側で検出して修正が反映されます。
+
+![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/update-alm-waiting.png)
+
+![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/update-alm-done.png)
+
+![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/update-alm-website.png)
