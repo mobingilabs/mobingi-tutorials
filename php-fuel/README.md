@@ -119,7 +119,7 @@ Build web apps on mobingiALM with local docker enviroment.
 
 ```
 docker run --name tutorialdev-alone --restart \
-always -v /Users/kodo/mobingi-tutorials/php-fuel/developer:/var/www/html -p 80:80 -it tutorialdev01 /run.sh
+always -v /Users/kodo/mobingi-tutorials:/var/www/html -p 80:80 -it tutorialdev01 /run.sh
 ```
 
 - `\`は、折返しで記載しています。１行で続けて入力してください。
@@ -141,7 +141,7 @@ always -v /Users/kodo/mobingi-tutorials/php-fuel/developer:/var/www/html -p 80:8
       ```
 
 ### 2.2.起動したdockerコンテナの中を確認する
-- コマンドラインから以下を実行します。
+- 新しいterminalを起動し、コマンドラインから以下を実行します。
 ```
 docker ps -a
 ```
@@ -221,6 +221,7 @@ repositoryの設定| public
 
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/regist-mobingi-docker-00.png)
 
+※ リリース用のdockerイメージも同様に作成しpushします。
 
 
 ### 3.3.用意したdockerイメージを使ってALMのstackを起動する
