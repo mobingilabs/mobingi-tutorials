@@ -22,7 +22,7 @@ Build web apps on mobingiALM with local docker enviroment.
 5. mobingiALMにテスト用とリリース用のstackを作成する
     - Lunch ALM for test,release with registed docker image
 6. 開発環境で修正したソースをmobingiALMに反映する
-    - modify source code on local env, and updata mobingiALM
+    - modify source code on local env, and update mobingiALM
 
 
 
