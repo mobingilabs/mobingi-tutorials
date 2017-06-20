@@ -32,7 +32,7 @@
 - このチュートリアルでは、作業に必要なdockerイメージを作成するところまでを説明します。
 - dockerfileの記述内容については長くなるため省略します。
 
-### 作業環境のファイル構成と取得(File structure on local env)
+### 1.1.作業環境のファイル構成と取得(File structure on local env)
  1. 作業フォルダの場所
     - dockerイメージのフォルダをアタッチするため、Users/[username]/の下に作業フォルダを用意します。
 
@@ -58,7 +58,7 @@
     > git clone https://github.com/mobingilabs/mobingi-tutorials.git
     ```
 
-### イメージを作成する(Build docker image for dev,release)
+### 1.2.イメージを作成する(Build docker image for dev,release)
 
   3. 開発用のイメージを作成
 
@@ -102,7 +102,7 @@
 ## 2. ローカルのDocker環境でアプリケーションを実行する
 - このチュートリアルでは、作成したdockerイメージを使用してローカル環境でWebアプリケーションを実行するところまでを説明します。
 
-### 作成した開発用イメージを起動する
+### 2.1.作成した開発用イメージを起動する
 - コマンドラインから以下を実行します。
 
 ```
@@ -128,7 +128,7 @@ always -v /Users/kodo/mobingi-tutorials/php-fuel/developer:/var/www/html -p 80:8
       > docker rm `docker ps -a -q`
       ```
 
-### 起動したdockerコンテナの中を確認する
+### 2.2.起動したdockerコンテナの中を確認する
 - コマンドラインから以下を実行します。
 ```
 docker ps -a
@@ -154,37 +154,66 @@ docker ps -a
 ## 3. mobingiALMに必要な設定を準備する
 - このチュートリアルでは、mobingiALMで作成したdockerイメージを使いstackを起動するまで前準備について説明します。
 - なお、dockerイメージの保管にはモビンギのDockerRegistryを利用する前提になります。
-### AWSのアクセスキーを設定する
-mobingiALMはマスターアカウントで各クラウドへの認証情報を管理する仕組みになっています。
-
-認証情報設定からstack作成の対象にするアカウントを登録します。
+### 3.1.AWSのアクセスキーを設定する
+mobingiALMはマスターアカウントで各クラウドへの認証情報を管理する仕組みになります。<br>
+このため認証情報設定から、stack作成の対象にするアカウント情報（認証Key）を登録します。
 
 
 （設定画像）
 
 
-### mobingiALMのstackを起動するユーザーアカウントを作成する
-- モビンギのDockerRegistryは、mobingiALMのユーザーのみ利用可能な仕組みになります。
+### 3.2.mobingiALMのstackを起動するユーザーアカウントを作成する
+- モビンギのDockerRegistryは、mobingiALMのユーザーのみ利用可能となっています。
 - 作成したユーザーがdockerイメージをpushするためのログインアカウントになります。
 
+設定内容 | 設定値
+--------------------|--------------
+ALMのユーザー | testtest
+（開発用）| ー
+登録するイメージ| tutorialdev01
+作成するrepository| regitry.mobingi.com/testtest/tutorialdev01
+repositoryの設定| public
+（リリース用）| ー
+登録するイメージ| tutorialrel01
+作成するrepository| registry.mobingi.com/testtest/tutorialrel01
+repositoryの設定| public
+
+※ repositoryのprivate設定は、近日のupdateで利用可能になります。
+
 1. mobingiALMのアカウントを作成する
+- マスターアカウントの一般設定からユーザー設定を開きます。
+
+(設定画像)
+
+2. モビンギのdocker registryにrepositoryを作成する
+- 作成したユーザーアカウントでログインして、コンテナレジストリからdockerイメージを登録するrepositoryを作成します。
+- repositoryの公開設定をpublicに変更します。
+
+（設定画像）
+
+3. モビンギのdocker registryにログインする
+- ローカル環境から以下のコマンドを実行します。
+```
+> docker login registry.mobingi.com
+```
+※ ログインIDとパスワードは、『1.mobingiALMのアカウントを作成する』で作成したアカウントになります。
+
+4. モビンギのdocker registryにイメージを登録する
+- ローカル環境から以下のコマンドを実行します。
+```
+> docker tag tutorialdev01 registry.mobingi.com/testtest/
+```
+（実行画像）
 
 
-2. モビンギのdocker registryにログインする
-
-
-3. モビンギのdocker registryにイメージを登録する
-   - Push mobingi private registry
-
-
-### 用意したdockerイメージを使ってALMのstackを起動する
+### 3.3.用意したdockerイメージを使ってALMのstackを起動する
 
  - After all test pass, lunch ALM by using build image.
 
-### 起動したstackにgitのソースを接続する
+### 3.4.起動したstackにgitのソースを接続する
 
  - After lunch ALM stack, try to connect git repository.
 
-## ローカル環境で修正したソースをmobingiALMにリリースする
+## 4.ローカル環境で修正したソースをmobingiALMにリリースする
 
  - local env change and push to git, ALM stack rebuild and switch new env automatically.
