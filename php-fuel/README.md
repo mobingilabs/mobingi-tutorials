@@ -19,9 +19,8 @@
 2. ローカルのDocker環境でアプリケーションを実行する
    - docker runからローカル環境のフォルダにマウントして開発作業する手順まで
 3. mobingiALMに必要な設定を準備する
-4. モビンギのdocker registryを利用する
-5. mobingiALMにテスト用とリリース用のstackを作成する
-6. ローカル環境で修正したソースをmobingiALM上にリリースする
+4. ローカル環境で修正したソースをmobingiALM上にリリースする
+5. PHPFrameworkのFuelを導入する
 
 
 
@@ -171,7 +170,7 @@ docker ps
 > ls
 ```
 
-ホスト端末のブラウザから以下のURLでアクセスしてPHPINFOが表示されれば成功です。
+ホスト端末のブラウザから以下のURLでアクセスしてPHPInfoが表示されれば成功です。
 
 `http://localhost/test.php`
 
@@ -183,9 +182,8 @@ docker ps
 ```
 docker run --name tutorialrel-alone -v /Users/kodo/mobingi-tutorials:/var/www/html -p 80:80 -d tutorialrel01
 ```
-
-※ イメージ作成後の確認は、開発用と同様になります。<br>
-※ 利用するポートが重複するため開発用イメージを停止してから起動してください。
+**※ イメージ作成後の確認は、開発用と同様になります。<br>
+※ 利用するポートが重複するため開発用イメージを停止してから起動してください。**
 
 ## 3. mobingiALMに必要な設定を準備する
 - このチュートリアルでは、mobingiALMで作成したdockerイメージを使いstackを起動するまで前準備について説明します。
@@ -245,10 +243,23 @@ repositoryの設定| public
 
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/regist-mobingi-docker-00.png)
 
-※ リリース用のdockerイメージも同様に作成しpushします。
+**※ リリース用のdockerイメージも同様に作成しpushします。**
 
 
 ### 3.3.用意したdockerイメージを使ってALMのstackを起動する
+各stackを作成するときに設定する情報
+
+設定内容 | 設定値
+--------------------|--------------
+mobingiALMのユーザー | testtest
+（開発用stack）| tutorialdel01-01
+割当てるrepository| regitry.mobingi.com/testtest/tutorialdev01
+割当てるgithub| forkしたアカウントのmobingi-tutorials
+割当てるgithubのbranch| 任意で作成したブランチ
+（リリース用stack）| tutorialrel01-01
+割当てるrepository| registry.mobingi.com/testtest/tutorialrel01
+割当てるgithub| forkしたアカウントのmobingi-tutorials
+割当てるgithubのbranch| master
 
 1. 『3.2.mobingiALMのstackを起動するユーザーアカウントを作成する』で作成したアカウントでmobingiALMにログインします。
 
@@ -263,6 +274,7 @@ repositoryの設定| public
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/create-stack-dev-00.png)
 
 
+**※ リリース用stackも同様に作成します。**
 
 
 ### 3.4.起動したstackにgithubのソースを接続する
@@ -280,7 +292,7 @@ repositoryの設定| public
 
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/create-stack-github-02.png)
 
-接続完了した設定画面
+接続が完了した設定画面
 
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/create-stack-github-03.png)
 
@@ -292,6 +304,7 @@ repositoryの設定| public
 
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/preview-website-preview-00.png)
 
+**※ リリース用github接続も同様に設定します。**
 
 ## 4.ローカル環境で修正したソースをmobingiALM上にリリースする
 - このチュートリアルでは、ローカル環境で起動したdockerイメージの環境でソースを修正して、各stack環境に反映されることを確認するところまでを説明します。
