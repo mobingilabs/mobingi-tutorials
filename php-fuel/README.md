@@ -1,5 +1,5 @@
 # mobingiALM＋DockerによるDevOps
-Build web apps on mobingiALM with local docker enviroment.
+〜Build web apps on mobingiALM with local docker enviroment.〜
 
  - このチュートリアルについて
    - DockerとmobingiALMを使って開発作業を行うための環境作りとプロダクト環境へのリリースを学習することができます。
@@ -14,31 +14,40 @@ Build web apps on mobingiALM with local docker enviroment.
 
 あるとよい知識：docker
 
-0. Docker for macOS をインストール(Install docker for macOS)
-1. Dockerイメージを作成する(Build docker image)
-2. ローカルのDocker環境でアプリケーションを実行する(Run apps on local machine with docker env)
+0. Docker for macOS をインストール
+1. Dockerイメージを作成する
+2. ローカルのDocker環境でアプリケーションを実行する
    - docker runからローカル環境のフォルダにマウントして開発作業する手順まで
 3. mobingiALMに必要な設定を準備する
-4. モビンギのdocker registryを利用する(Use mobingi docker registry)
+4. モビンギのdocker registryを利用する
 5. mobingiALMにテスト用とリリース用のstackを作成する
-    - Launch ALM for test,release with registered docker image
-6. 開発環境で修正したソースをmobingiALMに反映する
-    - modify source code on local env, and update mobingiALM
+6. ローカル環境で修正したソースをmobingiALM上にリリースする
 
 
 
-## 0.Docker for macOS をインストール(Install docker for macOS)
+## 0.Docker for macOS をインストール
 - 下記URLを参照の上、ご利用端末にインストールしてください。
 - https://docs.docker.com/docker-for-mac/install/
 
 
 
-## 1.Dockerイメージを作成する(Build docker image)
+## 1.Dockerイメージを作成する
 - このチュートリアルでは、作業に必要なdockerイメージを作成するところまでを説明します。
 - dockerfileの記述内容については長くなるため省略します。
 - 事前にgithubのアカウントを準備してください。
 
-### 1.1.作業環境のファイル構成と取得(File structure on local env)
+dockerイメージの設定内容
+
+設定内容 | 設定値
+--------------------|--------------
+apache | virtualhostで実行
+confパス| /etc/apache2/sites-available/000-default.conf
+mountフォルダ|/configに記載されているパス（/var/www/html）
+
+※ 設定内容の詳細については、[mobingiDocs](https://docs.mobingi.com/official/guide/jp/custom-image)も参考にしてください。
+
+
+### 1.1.作業環境のファイル構成と取得
  1. 作業フォルダの場所
     - dockerイメージのフォルダをアタッチするため、/Users/[username]/の下に作業フォルダを用意します。
 
@@ -55,13 +64,13 @@ Build web apps on mobingiALM with local docker enviroment.
       ```
 
 
- 2. サンプルのリポジトリをフォークする(fork sample git repository)
+ 2. サンプルのリポジトリをフォークする
 
     `https://github.com/mobingilabs/mobingi-tutorials.git`
 
     githubのリポジトリページから右上にあるforkをクリックします。
 
-    (画像)
+    ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/github-fork.png)
 
     用意したアカウントにフォークされたリポジトリが作成されるのでcloneします。
 
@@ -71,9 +80,10 @@ Build web apps on mobingiALM with local docker enviroment.
     ```
     ※ [xxxx]はフォークしたgithubアカウントIDになります。
 
-### 1.2.イメージを作成する(Build docker image for dev,release)
+### 1.2.用途別にイメージを作成する
+ここでは開発用とリリース用で設定内容の異なるイメージを作成します。
 
-  3. 開発用のイメージを作成
+  1. 開発用のイメージを作成
 
         設定内容 | 設定値
         --------------------|--------------
@@ -82,7 +92,7 @@ Build web apps on mobingiALM with local docker enviroment.
 
         - dockerイメージの設定内容については以下のファイルを参照してください。
           - php-fuel/docker/7.0-dev/Dockerfile
-
+          -
         - Apacheの設定内容については以下のファイルを参照してください。
           - php-fuel/docker/conf/000-default.conf
 
@@ -91,8 +101,9 @@ Build web apps on mobingiALM with local docker enviroment.
         > docker build -f 7.0-dev/Dockerfile -t tutorialdev01 .
         ```
         - ビルドが完了したら、`docker images`を実行してイメージを確認します。
+        -
 
-  4. リリース用のイメージを作成
+  2. リリース用のイメージを作成
 
        設定内容 | 設定値
        --------------------|--------------
@@ -124,8 +135,9 @@ always -v /Users/kodo/mobingi-tutorials:/var/www/html -p 80:80 -d tutorialdev01
 ```
 
 - `\`は、折返しで記載しています。１行で続けて入力してください。
- - `-v`は、環境に合わせて修正してください。
+ - `-v`の`[host-folder]`は利用環境に合わせて修正してください。
    - `[host-folder]:[container-folder]`になります。
+   - `[container-folder]`は、dockerイメージのapache設定に関係するので変更しないでください。
    - ホスト側で指定できるのは、dockerの環境設定でマウント対象となるフォルダ配下になります。
  - `--restart always`は、dockerホストを再起動すると自動的に起動するオプションになります。
 
@@ -164,6 +176,16 @@ docker ps
 `http://localhost/test.php`
 
 ![Webサイト確認画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/preview-website-preview-00.png)
+
+### 2.3.作成したリリース用イメージを起動する
+- コマンドラインから以下を実行します。
+
+```
+docker run --name tutorialrel-alone -v /Users/kodo/mobingi-tutorials:/var/www/html -p 80:80 -d tutorialrel01
+```
+
+※ イメージ作成後の確認は、開発用と同様になります。<br>
+※ 利用するポートが重複するため開発用イメージを停止してから起動してください。
 
 ## 3. mobingiALMに必要な設定を準備する
 - このチュートリアルでは、mobingiALMで作成したdockerイメージを使いstackを起動するまで前準備について説明します。
@@ -228,8 +250,6 @@ repositoryの設定| public
 
 ### 3.3.用意したdockerイメージを使ってALMのstackを起動する
 
- - After all test pass, launch ALM by using build image.
-
 1. 『3.2.mobingiALMのstackを起動するユーザーアカウントを作成する』で作成したアカウントでmobingiALMにログインします。
 
 
@@ -245,20 +265,22 @@ repositoryの設定| public
 
 
 
-### 3.4.起動したstackにgitのソースを接続する
+### 3.4.起動したstackにgithubのソースを接続する
 
- - After launch ALM stack, try to connect git repository.
  - 接続したgithubのソースコードは起動したホストインスタンス上に配置され、dockerイメージ側で保持しているソースコード配置場所に自動的にマウントします。
 
 1. GitHubのプライベートリポジトリから接続します。
 
-ログインしていない場合、認証ページを経由するので利用を許可してください。
 
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/create-stack-github.png)
+
+ログインしていない場合、認証ページを経由するので利用を許可してください。
 
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/create-stack-github-01.png)
 
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/create-stack-github-02.png)
+
+接続完了した設定画面
 
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/create-stack-github-03.png)
 
@@ -266,13 +288,13 @@ repositoryの設定| public
 
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/create-stack-01.png)
 
-
+初期状態でアクセスするとPHPInfoが表示されます
 
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/preview-website-preview-00.png)
 
 
 ## 4.ローカル環境で修正したソースをmobingiALM上にリリースする
-- change source code on local env and push to git, ALM stack rebuild and switch new env automatically.
+- このチュートリアルでは、ローカル環境で起動したdockerイメージの環境でソースを修正して、各stack環境に反映されることを確認するところまでを説明します。
 
 1. 起動したローカル環境でソースコードを修正して接続したgit repositoryにpushします。
 
@@ -282,8 +304,20 @@ repositoryの設定| public
 
 2. 自動的にmobingiALM側で検出して修正が反映されます。
 
+githubへpushするとmobingiALMのstack側で自動的にソースコードを取得し環境を入替えます。
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/update-alm-waiting.png)
 
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/update-alm-done.png)
 
+環境の切替が完了すると反映された修正が確認できます。
+
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/update-alm-website.png)
+
+
+## 5.PHPframeworkのFuelを導入する
+- このチュートリアルでは、PHPFrameworkのFuelを構築した環境に導入するところまでを説明します。
+
+
+
+
+以上で、本チュートリアルは終了となります。
