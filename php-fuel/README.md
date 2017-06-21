@@ -10,7 +10,8 @@ Build web apps on mobingiALM with local docker enviroment.
 
 # チュートリアル手順
 
-必要な知識：gitの操作、githubの操作<br>
+必要な知識：gitの操作、githubの操作
+
 あるとよい知識：docker
 
 0. Docker for macOS をインストール(Install docker for macOS)
@@ -20,7 +21,7 @@ Build web apps on mobingiALM with local docker enviroment.
 3. mobingiALMに必要な設定を準備する
 4. モビンギのdocker registryを利用する(Use mobingi docker registry)
 5. mobingiALMにテスト用とリリース用のstackを作成する
-    - Lunch ALM for test,release with registed docker image
+    - Launch ALM for test,release with registered docker image
 6. 開発環境で修正したソースをmobingiALMに反映する
     - modify source code on local env, and update mobingiALM
 
@@ -39,17 +40,17 @@ Build web apps on mobingiALM with local docker enviroment.
 
 ### 1.1.作業環境のファイル構成と取得(File structure on local env)
  1. 作業フォルダの場所
-    - dockerイメージのフォルダをアタッチするため、Users/[username]/の下に作業フォルダを用意します。
+    - dockerイメージのフォルダをアタッチするため、/Users/[username]/の下に作業フォルダを用意します。
 
       **file structure**
       ```
-      Users/[username]/
-          /mobingi-tutorials
+      /Users/[username]/
+          mobingi-tutorials/
           ※dockerイメージを作成するためのサンプルと作業環境一式
-            /php-fuel
-              /developer    ※ 開発作業用
+            php-fuel/
+              developer/    ※ 開発作業用
 
-              /docker       ※ docker作業用
+              docker/       ※ docker作業用
 
       ```
 
@@ -65,7 +66,7 @@ Build web apps on mobingiALM with local docker enviroment.
     用意したアカウントにフォークされたリポジトリが作成されるのでcloneします。
 
     ```
-    > cd /Users/[usename]/
+    > cd /Users/[username]/
     > git clone https://github.com/[xxxx]/mobingi-tutorials.git
     ```
     ※ [xxxx]はフォークしたgithubアカウントIDになります。
@@ -82,7 +83,7 @@ Build web apps on mobingiALM with local docker enviroment.
         - dockerイメージの設定内容については以下のファイルを参照してください。
           - php-fuel/docker/7.0-dev/Dockerfile
 
-        - dockerイメージの設定内容については以下のファイルを参照してください。
+        - Apacheの設定内容については以下のファイルを参照してください。
           - php-fuel/docker/conf/000-default.conf
 
         ```
@@ -101,7 +102,7 @@ Build web apps on mobingiALM with local docker enviroment.
        - dockerイメージの設定内容については以下のファイルを参照してください。
          - php-fuel/docker/7.0-release/Dockerfile
 
-       - dockerイメージの設定内容については以下のファイルを参照してください。
+       - Apacheの設定内容については以下のファイルを参照してください。
          - php-fuel/docker/conf/001-default.conf
 
        ```
@@ -119,7 +120,7 @@ Build web apps on mobingiALM with local docker enviroment.
 
 ```
 docker run --name tutorialdev-alone --restart \
-always -v /Users/kodo/mobingi-tutorials:/var/www/html -p 80:80 -it tutorialdev01 /run.sh
+always -v /Users/kodo/mobingi-tutorials:/var/www/html -p 80:80 -d tutorialdev01
 ```
 
 - `\`は、折返しで記載しています。１行で続けて入力してください。
@@ -143,7 +144,7 @@ always -v /Users/kodo/mobingi-tutorials:/var/www/html -p 80:80 -it tutorialdev01
 ### 2.2.起動したdockerコンテナの中を確認する
 - 新しいterminalを起動し、コマンドラインから以下を実行します。
 ```
-docker ps -a
+docker ps
 ```
 コンテナIDを確認します。
 ```
@@ -168,7 +169,8 @@ docker ps -a
 - このチュートリアルでは、mobingiALMで作成したdockerイメージを使いstackを起動するまで前準備について説明します。
 - なお、dockerイメージの保管にはモビンギのDockerRegistryを利用する前提になります。
 ### 3.1.AWSのアクセスキーを設定する
-mobingiALMはマスターアカウントで各クラウドへの認証情報を管理する仕組みになります。<br>
+mobingiALMはマスターアカウントで各クラウドへの認証情報を管理する仕組みになります。
+
 このため認証情報設定から、stack作成の対象にするアカウント情報（認証Key）を登録します。
 
 ![AWS認証情報設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/alm-credential-00.png)
@@ -216,7 +218,7 @@ repositoryの設定| public
 4. モビンギのdocker registryにイメージを登録する
 - ローカル環境から以下のコマンドを実行します。
 ```
-> docker tag tutorialdev01 registry.mobingi.com/testtest/
+> docker tag tutorialdev01 registry.mobingi.com/testtest/tutorialdev01
 ```
 
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/regist-mobingi-docker-00.png)
@@ -226,9 +228,9 @@ repositoryの設定| public
 
 ### 3.3.用意したdockerイメージを使ってALMのstackを起動する
 
- - After all test pass, lunch ALM by using build image.
+ - After all test pass, launch ALM by using build image.
 
-1. 『3.2.mobingiALMのstackを起動するユーザーアカウントを作成する』で作成したアカウントでmobingiALMにログインします。<br>
+1. 『3.2.mobingiALMのstackを起動するユーザーアカウントを作成する』で作成したアカウントでmobingiALMにログインします。
 
 
 
@@ -245,10 +247,11 @@ repositoryの設定| public
 
 ### 3.4.起動したstackにgitのソースを接続する
 
- - After lunch ALM stack, try to connect git repository.
+ - After launch ALM stack, try to connect git repository.
  - 接続したgithubのソースコードは起動したホストインスタンス上に配置され、dockerイメージ側で保持しているソースコード配置場所に自動的にマウントします。
 
-1. GitHubのプライベートリポジトリから接続します。<br>
+1. GitHubのプライベートリポジトリから接続します。
+
 ログインしていない場合、認証ページを経由するので利用を許可してください。
 
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/create-stack-github.png)
@@ -271,7 +274,7 @@ repositoryの設定| public
 ## 4.ローカル環境で修正したソースをmobingiALM上にリリースする
 - change source code on local env and push to git, ALM stack rebuild and switch new env automatically.
 
-1. 起動したローカル環境でソースコードを修正して接続したgit repositoryにpushします。<br>
+1. 起動したローカル環境でソースコードを修正して接続したgit repositoryにpushします。
 
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/update-local-source.png)
 
