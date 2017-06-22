@@ -4,7 +4,7 @@
  - このチュートリアルについて
    - DockerとmobingiALMを使って開発作業を行うための環境作りとプロダクト環境へのリリースを学習することができます。
 
- (構成図の絵)
+   ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/mobingiALM-devops.png)
 
 
 
@@ -327,10 +327,111 @@ githubへpushするとmobingiALMのstack側で自動的にソースコードを�
 ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/update-alm-website.png)
 
 
-## 5.PHPframeworkのFuelを導入する
-- このチュートリアルでは、PHPFrameworkのFuelを構築した環境に導入するところまでを説明します。
+## 5.PHPFrameworkのFuelPHPを導入する
+- このチュートリアルでは、PHPFrameworkのFuelPHPを構築した環境に導入するところまでを説明します。
+
+1. ローカル開発環境上でFuelを設定する
+
+    http://fuelphp.jp/docs/1.9/
+
+    こちらの手順をもとにローカル環境のフォルダ上で実行します。
+
+    ソースコードの開発作業フォルダまで移動します。
+
+    ```
+    cd /Users/xxx/xxxx/mobingi-tutorials/fuel-php/developer
+
+    curl https://get.fuelphp.com/oil | sh
+    mkdir Sites
+    cd Sites
+    oil create blog
+    ```
+    composerから必要なモジュールを取得してfuelPHPを実行するフォルダを生成します。
+
+    ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/fuelphp-install-01.png)
+
+    ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/fuelphp-install-02.png)
+
+    ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/fuelphp-install-03.png)
+
+    ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/fuelphp-install-04.png)
+
+
+    http://localhost/Sites/blog/public
+
+    ローカル開発環境上で記URLからFuelPHPのデモサイトが確認できたら完了です。
 
 
 
+
+2. 開発用のgithubにsource code一式をアップする
+
+    次に作成したデモサイトをgithubにアップします。
+
+    アップする際にfuelPHPの関連ソースを全て追加します。
+
+    ```
+    cd /Users/xxx/xxxx/mobingi-tutorials/fuel-php/developer
+
+    git add Sites
+    git commit -m 'update fuel content'
+
+    git add -f Sites/blog/fuel/core/
+    git add -f Sites/blog/fuel/package/
+    git add -f Sites/blog/fuel/vendor/
+    touch Sites/blog/fuel/app/logs/.gitkeep
+    touch Sites/blog/fuel/app/cache/.gitkeep
+    touch Sites/blog/fuel/app/tmp/.gitkeep
+
+    echo 'init'>Sites/blog/fuel/app/logs/.gitkeep
+    echo 'init'>Sites/blog/fuel/app/cache/.gitkeep
+    echo 'init'>Sites/blog/fuel/app/tmp/.gitkeep
+
+    git add -f Sites/blog/fuel/app/logs/.gitkeep
+    git add -f Sites/blog/fuel/app/cache/.gitkeep
+    git add -f Sites/blog/fuel/app/tmp/.gitkeep
+
+    git commit -m 'update fuel core'
+    git push
+    ```
+
+
+3. log、cache、tmpのパーミッションを修正するスクリプト
+
+   環境更新時、gitからソースフォルダに含む動的なファイル出力先のパーミッションがない状態になるので、mobingi-install.shを用意して対応します。
+
+   mobingi-install.shはgitのリポジトリのルート直下に配置します。
+
+
+   ```
+   chmod -R 777 /var/www/html/php-fuel/developer/Sites/blog/fuel/app/logs
+   chmod -R 777 /var/www/html/php-fuel/developer/Sites/blog/fuel/app/tmp
+   chmod -R 777 /var/www/html/php-fuel/developer/Sites/blog/fuel/app/cache
+   ```
+
+
+
+
+5. リリース用のgithubにマージする
+
+    github上で開発環境に接続しているブランチからmasterブランチへマージします。
+
+
+5. fuelPHPが動作していることを確認する
+
+    スタック詳細の右上にあるリソースのリンクを開くきます。
+
+    http://[stackのurl]/Sites/blog/public/
+
+
+
+
+### 補足
+
+FuelPHPの場合、PublicフォルダをDocumentRootにする想定となるので、今回の手順ではdockerイメージに含むapacheの設定を修正する必要があります。
+
+また、ログやキャッシュなど動的に出力されるファイルがdockerコンテナ上に出力されるため、必要に応じて永続化する対応が必要になります。
+
+この点については、今後のmobingiALMのアップデートで対応できることを期待します。
 
 以上で、本チュートリアルは終了となります。
