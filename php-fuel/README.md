@@ -4,7 +4,7 @@
  - このチュートリアルについて
    - DockerとmobingiALMを使って開発作業を行うための環境作りとプロダクト環境へのリリースを学習することができます。
 
- (構成図の絵)
+   ![設定の画面](https://raw.githubusercontent.com/wiki/mobingilabs/mobingi-tutorials/images/mobingiALM-devops.png)
 
 
 
